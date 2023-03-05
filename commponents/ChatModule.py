@@ -7,7 +7,7 @@ class ChatModule:
     def __init__(self):
         self.sr = sr.Recognizer()
         self.speechEngine = pyttsx3.init()
-        openai.api_key = "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"
+        openai.api_key = "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"
 
     def record(self):
         with sr.Microphone() as source:
@@ -16,12 +16,12 @@ class ChatModule:
 
     def recognize_audio(self, audio):
         try:
-            text = self.sr.recognize_google(audio)
+            text = self.sr.recognize_google(audio, language="pl-PL")
             return text
         except sr.UnknownValueError:
-            print("Google Speech Recognition could not understand audio")
+            print("Google Speech Recognition nie może zrozumieć mowy")
         except sr.RequestError as e:
-            print(f"Could not request results from Google Speech Recognition service; {e}")
+            print(f"Nie można uzyskać wyników z usługi Google Speech Recognition; {e}")
         return None
 
     def get_open_ai_response(self, text):
@@ -40,19 +40,19 @@ class ChatModule:
             print(f"Error querying OpenAI API: {e}")
 
     def say(self, text):
-        self.speechEngine.setProperty('rate', 120)  # Speed in words per minute
+        self.speechEngine.setProperty('rate', 180)  # Speed in words per minute
         self.speechEngine.setProperty('volume', 1.0)  # Volume, from 0 to 1
         self.speechEngine.say(text)
         self.speechEngine.runAndWait()
 
     def run(self):
-        self.say("Say something!")
+        self.say("Powiedz coś")
         audio = self.record()
         text = self.recognize_audio(audio)
-        print(f"You said: {text}")
+        print(f"Powiedziałeś: {text}")
 
         if text is not None:
             response = self.get_open_ai_response(text)
-            print(f"AI answer: {response}")
+            print(f"Melson: {response}")
             if response is not None:
                 self.say(response)
